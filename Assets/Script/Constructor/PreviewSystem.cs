@@ -57,7 +57,7 @@ public class PreviewSystem : MonoBehaviour
 
     public void StartShowingPlacementPreview(GameObject prefab, Vector2Int size)
     {
-        Debug.Log(prefab != null ? "Starting new preview for prefab: " + prefab.name + " with size: " + size : "Starting new preview with no prefab, size: " + size);
+       
         Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (previewObject != null)
             Destroy(previewObject); 

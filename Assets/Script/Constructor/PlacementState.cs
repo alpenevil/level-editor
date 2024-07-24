@@ -67,7 +67,7 @@ public class PlacementState : IBuildingState
 
     public void OnAction(Vector3Int gridPosition)
     {
-        Debug.Log("Attempting to place an object...");
+       // Debug.Log("Attempting to place an object...");
 
         if ((database.objectsData[selectedObjectIndex].Type == ObjectType.SpawnPoint || database.objectsData[selectedObjectIndex].Type == ObjectType.EnemySpawnPoint)
             && !IsFloorBelow(gridPosition))
@@ -80,7 +80,7 @@ public class PlacementState : IBuildingState
 
         if (database.objectsData[selectedObjectIndex].Type == ObjectType.EnemySpawnPoint)
         {
-            Debug.Log("Checking for existing enemy patrol points...");
+           // Debug.Log("Checking for existing enemy patrol points...");
 
             if (AreEnemyPatrolPointsPlaced())
             {
@@ -107,18 +107,18 @@ public class PlacementState : IBuildingState
 
             if (patrolPointCount == 0)
             {
-                Debug.Log("Placing the first enemy patrol point (A).");
+              //  Debug.Log("Placing the first enemy patrol point (A).");
                 SetEnemyPatrolPointA(grid.CellToWorld(gridPosition));
             }
             else if (patrolPointCount == 1)
             {
-                Debug.Log("Placing the second enemy patrol point (B).");
+               // Debug.Log("Placing the second enemy patrol point (B).");
                 SetEnemyPatrolPointB(grid.CellToWorld(gridPosition));
             }
         }
         else if (database.objectsData[selectedObjectIndex].Type == ObjectType.SpawnPoint)
         {
-            Debug.Log("Checking for existing player spawn point...");
+        //    Debug.Log("Checking for existing player spawn point...");
             if (IsPlayerSpawnPointPlaced())
             {
                 Debug.LogWarning("A player spawn point already exists. Remove the existing one before placing a new one.");
@@ -165,11 +165,11 @@ public class PlacementState : IBuildingState
             ObjectData objectData = database.objectsData.Find(obj => obj.Prefab.name == placedObjectName);
             if (objectData != null && objectData.Type == ObjectType.SpawnPoint)
             {
-                Debug.Log($"Existing player spawn point found: {placedObject.name}");
+               // Debug.Log($"Existing player spawn point found: {placedObject.name}");
                 return true;
             }
         }
-        Debug.Log("No existing player spawn point found.");
+      //  Debug.Log("No existing player spawn point found.");
         return false;
     }
 
@@ -198,7 +198,7 @@ public class PlacementState : IBuildingState
         ObjectData spawnPointData = database.objectsData.Find(obj => obj.Type == ObjectType.SpawnPoint);
         if (spawnPointData == null)
         {
-            Debug.LogWarning("Spawn point object not found in database.");
+          //  Debug.LogWarning("Spawn point object not found in database.");
             return;
         }
 

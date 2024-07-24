@@ -15,8 +15,8 @@ public class GridData
         PlacementData data = new PlacementData(positionToOccupy, ID, placedObjectIndex);
         foreach (var pos in positionToOccupy)
         {
-            if (placedObjects.ContainsKey(pos))
-                throw new Exception($"Dictionary already contains this cell position {pos}");
+           // if (placedObjects.ContainsKey(pos))
+               // throw new Exception($"Dictionary already contains this cell position {pos}");
             placedObjects[pos] = data;
            
         }
@@ -54,7 +54,7 @@ public class GridData
 
     public void ClearGrid()
     {
-        Debug.Log("Clearing the grid with " + placedObjects.Count + " entries.");
+       // Debug.Log("Clearing the grid with " + placedObjects.Count + " entries.");
         placedObjects.Clear();
     }
 
@@ -100,12 +100,12 @@ public class GridData
             foreach (var pos in data.occupiedPositions)
             {
                 placedObjects.Remove(pos);
-                Debug.Log("Successfully removed position from grid: " + pos);
+               // Debug.Log("Successfully removed position from grid: " + pos);
             }
         }
         else
         {
-            Debug.Log("No object at position " + gridPosition + " to remove.");
+           // Debug.Log("No object at position " + gridPosition + " to remove.");
         }
 
     }

@@ -57,11 +57,6 @@ public class RandomState : IBuildingState
                 randomSelections.Add(objData);
             }
         }
-        Debug.Log("Random Selections for Placement:");
-        foreach (ObjectData objData in randomSelections)
-        {
-            Debug.Log(objData.Name);
-        }
 
         UpdateRandomIndex();
         if (randomIndex != -1)
@@ -80,7 +75,7 @@ public class RandomState : IBuildingState
             }
             else
             {
-                Debug.LogWarning("No prefab available for random selection.");
+                //Debug.LogWarning("No prefab available for random selection.");
             }
         }
         else
@@ -124,7 +119,7 @@ public class RandomState : IBuildingState
             }
             else
             {
-                Debug.LogWarning("No new preview");
+               // Debug.LogWarning("No new preview");
                 previewSystem.StartShowingPlacementPreview(null, Vector2Int.one); 
             }
         }
@@ -140,7 +135,7 @@ public class RandomState : IBuildingState
     {
         if (randomSelections == null || randomSelections.Count == 0)
         {
-            Debug.LogWarning("No objects available for random selection.");
+           // Debug.LogWarning("No objects available for random selection.");
             soundFeedback.PlaySound(SoundType.wrongPlacement);
             previewSystem.StopShowingPreview();
             return;
@@ -161,7 +156,7 @@ public class RandomState : IBuildingState
         }
         else
         {
-            Debug.LogWarning("No new preview");
+           // Debug.LogWarning("No new preview");
             previewSystem.StartShowingPlacementPreview(null, Vector2Int.one); 
         }
     }
@@ -171,7 +166,7 @@ public class RandomState : IBuildingState
     {
         if (randomSelections == null)
         {
-            Debug.LogError("Random selections list is not initialized.");
+           // Debug.LogError("Random selections list is not initialized.");
             return -1;
         }
 
@@ -308,13 +303,13 @@ public class RandomState : IBuildingState
     {
         if (randomSelections == null || randomSelections.Count == 0)
         {
-            Debug.LogWarning("Random selections list is empty.");
+           // Debug.LogWarning("Random selections list is empty.");
             return;
         }
 
         if (randomIndex < 0 || randomIndex >= randomSelections.Count)
         {
-            Debug.LogError("randomIndex is out of range: " + randomIndex);
+           // Debug.LogError("randomIndex is out of range: " + randomIndex);
             return;
         }
 
@@ -334,11 +329,7 @@ public class RandomState : IBuildingState
                 randomSelections.Add(objData);
             }
         }
-        Debug.Log("Updated Random Selections for Placement:");
-        foreach (ObjectData objData in randomSelections)
-        {
-            Debug.Log(objData.Name);
-        }
+       // Debug.Log("Updated Random Selections for Placement:");
         UpdateRandomIndex();
     }
 

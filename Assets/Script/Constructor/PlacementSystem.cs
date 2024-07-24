@@ -54,7 +54,7 @@ public class PlacementSystem : MonoBehaviour
 
     private void HandleDoubleClick(Vector3Int position)
     {
-        Debug.Log("Double click at position: " + position);
+        //Debug.Log("Double click at position: " + position);
        
     }
 
@@ -124,6 +124,7 @@ public class PlacementSystem : MonoBehaviour
         inputManager.OnStartSelection += StartSelection;
         inputManager.OnUpdateSelection += UpdateSelection;
         inputManager.OnEndSelection += EndSelection;
+        inputManager.OnExit += StopPlacement;
     }
 
     private void StartSelection(Vector3Int startPosition)

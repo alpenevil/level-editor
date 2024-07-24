@@ -43,6 +43,7 @@ public class LevelManager : MonoBehaviour
             string levelName = PlayerPrefs.GetString("levelToLoad");
             PlayerPrefs.DeleteKey("levelToLoad");
             LoadLevelFromFile(levelName);
+            Debug.Log("Level successfully loaded!");
         }
         FindObjectOfType<LevelManagerUI>()?.PopulateLoadDropdown();
     }
@@ -284,6 +285,6 @@ public class LevelManager : MonoBehaviour
 
         byte[] bytes = screenShot.EncodeToPNG();
         File.WriteAllBytes(screenshotPath, bytes);
-        Debug.Log("Screenshot saved to: " + screenshotPath);
+        Debug.Log("Level successfully saved!");
     }
 }
