@@ -49,20 +49,8 @@ public class GridTextureGenerator : MonoBehaviour
         Texture2D gridTexture = GenerateGridTexture();
         RawImage rawImage = GetComponent<RawImage>();
         rawImage.texture = gridTexture;
-
-        RectTransform rectTransform = rawImage.rectTransform;
-        float panelAspectRatio = rectTransform.rect.width / rectTransform.rect.height;
-        float textureAspectRatio = (float)textureSize / textureSize;
-
-        if (panelAspectRatio > textureAspectRatio)
-        {
-            float scaleFactor = rectTransform.rect.height / textureSize;
-            rawImage.uvRect = new Rect(0, 0, scaleFactor * panelAspectRatio, scaleFactor);
-        }
-        else
-        {
-            float scaleFactor = rectTransform.rect.width / textureSize;
-            rawImage.uvRect = new Rect(0, 0, scaleFactor, scaleFactor / panelAspectRatio);
-        }
+        float uvRectW = (float)(Screen.width) / textureSize;
+        float uvRectH = uvRectW / (Screen.width / (float)Screen.height);
+        rawImage.uvRect = new Rect(0, 0, uvRectW, uvRectH);
     }
 }
