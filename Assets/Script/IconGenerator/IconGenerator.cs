@@ -1,13 +1,15 @@
 using UnityEngine;
 using System.IO;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 public class IconGenerator : MonoBehaviour
 {
     public Camera captureCamera;
     public string savePath = "Assets/Icons";
     public Vector2 iconSize = new Vector2(256, 256);
-    public ObjectsDatabaseSO objectsDatabase; 
+    public ObjectsDatabaseSO objectsDatabase;
 
     private void Start()
     {
@@ -52,20 +54,15 @@ public class IconGenerator : MonoBehaviour
 
             try
             {
-               
                 GameObject instance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
 
-            
                 instance.SetActive(true);
 
-              
                 SetRenderersActive(instance, true);
 
-              
                 captureCamera.clearFlags = CameraClearFlags.SolidColor;
                 captureCamera.backgroundColor = new Color(0, 0, 0, 0);
 
-            
                 Bounds bounds = CalculateBounds(instance);
 
                 captureCamera.orthographic = true;
@@ -88,6 +85,7 @@ public class IconGenerator : MonoBehaviour
                 string fileName = Path.Combine(savePath, objectData.Name + ".png");
                 File.WriteAllBytes(fileName, bytes);
 
+#if UNITY_EDITOR
                 string assetPath = "Assets/Icons/" + objectData.Name + ".png";
                 AssetDatabase.ImportAsset(assetPath, ImportAssetOptions.ForceUpdate);
                 Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
@@ -98,6 +96,7 @@ public class IconGenerator : MonoBehaviour
                     AssetDatabase.CreateAsset(iconSprite, spritePath);
                     objectData.SetIconSprite(iconSprite);
                 }
+#endif
 
                 instance.SetActive(false);
                 Destroy(instance);
@@ -110,7 +109,9 @@ public class IconGenerator : MonoBehaviour
                 Debug.LogError($"An error occurred while processing {objectData.Name}: {ex.Message}");
             }
 
+#if UNITY_EDITOR
             EditorUtility.SetDirty(objectsDatabase);
+#endif
         }
     }
 
@@ -143,9 +144,11 @@ public class IconGenerator : MonoBehaviour
         {
             try
             {
+#if UNITY_EDITOR
                 EditorUtility.SetDirty(objectsDatabase);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
+#endif
             }
             catch (System.Exception ex)
             {
