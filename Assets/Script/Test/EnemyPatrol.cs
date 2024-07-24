@@ -30,7 +30,7 @@ public class EnemyPatrol : MonoBehaviour
         List<Node> path = AStarPathfinding.Instance.FindPath(startPoint, endPoint);
         if (path == null)
         {
-            Debug.LogError("Path not found");
+           // Debug.LogError("Path not found");
             yield break;
         }
 
