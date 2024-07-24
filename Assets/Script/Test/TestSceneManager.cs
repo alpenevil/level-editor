@@ -25,7 +25,7 @@ public class TestSceneManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("PathfindingGrid not found!");
+            // Debug.LogError("PathfindingGrid not found!");
         }
 
         if (PlayerPrefs.HasKey("levelToLoad"))
@@ -51,7 +51,7 @@ public class TestSceneManager : MonoBehaviour
         if (player != null)
         {
             player.transform.position = spawnPoint;
-            Debug.Log($"Player spawned at {spawnPoint}");
+            //Debug.Log($"Player spawned at {spawnPoint}");
         }
         else
         {
@@ -60,42 +60,46 @@ public class TestSceneManager : MonoBehaviour
 
         if (currentLevelData != null)
         {
-            ObjectData enemySpawnPointData = database.objectsData.Find(obj => obj.Type == ObjectType.EnemySpawnPoint);
-            if (enemySpawnPointData == null)
+
+            if (currentLevelData.enemyPatrolPointA != Vector3.zero || currentLevelData.enemyPatrolPointB != Vector3.zero)
             {
-                Debug.LogWarning("Enemy spawn point object not found in database.");
-                return;
-            }
-            Vector2Int enemySpawnPointSize = enemySpawnPointData.Size;
-
-            Vector3 patrolPointA = new Vector3(
-                currentLevelData.enemyPatrolPointA.x + enemySpawnPointSize.x / 2f,
-                currentLevelData.enemyPatrolPointA.y,
-                currentLevelData.enemyPatrolPointA.z + enemySpawnPointSize.y / 2f);
-
-            Vector3 patrolPointB = new Vector3(
-                currentLevelData.enemyPatrolPointB.x + enemySpawnPointSize.x / 2f,
-                currentLevelData.enemyPatrolPointB.y,
-                currentLevelData.enemyPatrolPointB.z + enemySpawnPointSize.y / 2f);
-
-            if (patrolPointA != Vector3.zero)
-            {
-                GameObject enemy = Instantiate(enemyPrefab, patrolPointA, Quaternion.identity);
-                EnemyPatrol patrol = enemy.GetComponent<EnemyPatrol>();
-
-                GameObject pointAObject = new GameObject("PointA");
-                pointAObject.transform.position = patrolPointA;
-                patrol.pointA = pointAObject.transform;
-
-                if (patrolPointB != Vector3.zero)
+                ObjectData enemySpawnPointData = database.objectsData.Find(obj => obj.Type == ObjectType.EnemySpawnPoint);
+                if (enemySpawnPointData == null)
                 {
-                    GameObject pointBObject = new GameObject("PointB");
-                    pointBObject.transform.position = patrolPointB;
-                    patrol.pointB = pointBObject.transform;
+                    Debug.LogWarning("Enemy spawn point object not found in database.");
+                    return;
                 }
-                else
+                Vector2Int enemySpawnPointSize = enemySpawnPointData.Size;
+
+                Vector3 patrolPointA = new Vector3(
+                    currentLevelData.enemyPatrolPointA.x + enemySpawnPointSize.x / 2f,
+                    currentLevelData.enemyPatrolPointA.y,
+                    currentLevelData.enemyPatrolPointA.z + enemySpawnPointSize.y / 2f);
+
+                Vector3 patrolPointB = new Vector3(
+                    currentLevelData.enemyPatrolPointB.x + enemySpawnPointSize.x / 2f,
+                    currentLevelData.enemyPatrolPointB.y,
+                    currentLevelData.enemyPatrolPointB.z + enemySpawnPointSize.y / 2f);
+
+                if (patrolPointA != Vector3.zero)
                 {
-                    patrol.pointB = null;
+                    GameObject enemy = Instantiate(enemyPrefab, patrolPointA, Quaternion.identity);
+                    EnemyPatrol patrol = enemy.GetComponent<EnemyPatrol>();
+
+                    GameObject pointAObject = new GameObject("PointA");
+                    pointAObject.transform.position = patrolPointA;
+                    patrol.pointA = pointAObject.transform;
+
+                    if (patrolPointB != Vector3.zero)
+                    {
+                        GameObject pointBObject = new GameObject("PointB");
+                        pointBObject.transform.position = patrolPointB;
+                        patrol.pointB = pointBObject.transform;
+                    }
+                    else
+                    {
+                        patrol.pointB = null;
+                    }
                 }
             }
         }
@@ -103,7 +107,7 @@ public class TestSceneManager : MonoBehaviour
 
     void UpdatePathfindingGrid(Vector3Int position, Vector2Int size, ObjectType type, Vector3 rotation)
     {
-        Debug.Log($"Updating pathfinding grid at position {position} with size {size} for type {type}");
+        //Debug.Log($"Updating pathfinding grid at position {position} with size {size} for type {type}");
         if (type == ObjectType.Floor)
         {
             pathfindingGrid.MarkWalkable(position, size, rotation);
