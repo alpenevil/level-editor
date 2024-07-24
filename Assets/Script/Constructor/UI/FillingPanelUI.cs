@@ -5,15 +5,15 @@ using System.Collections.Generic;
 public class FillingPanelUI : MonoBehaviour
 {
     public ObjectsDatabaseSO objectsDatabase;
-    public GameObject itemUIPrefab; 
-    public Transform itemPanel; 
-    public PlacementSystem placementSystem; 
+    public GameObject itemUIPrefab;
+    public Transform itemPanel;
+    public PlacementSystem placementSystem;
 
-    public Sprite normalBackgroundSprite; 
-    public Sprite selectedBackgroundSprite; 
+    public Sprite normalBackgroundSprite;
+    public Sprite selectedBackgroundSprite;
 
-    private List<FillingItemUI> itemUIList = new List<FillingItemUI>(); 
-    private FillingItemUI selectedItem; 
+    private List<FillingItemUI> itemUIList = new List<FillingItemUI>();
+    private FillingItemUI selectedItem;
 
     void Start()
     {
@@ -40,7 +40,7 @@ public class FillingPanelUI : MonoBehaviour
 
         foreach (ObjectData objectData in objectsDatabase.objectsData)
         {
-            if (objectData.Purpose != ObjectPurpose.Ground) 
+            if (objectData.Purpose != ObjectPurpose.Ground)
             {
                 continue;
             }
@@ -58,6 +58,12 @@ public class FillingPanelUI : MonoBehaviour
                 Debug.LogError("FillingItemUI component not found in the prefab.");
             }
         }
+
+        // Select and highlight the first item by default
+        if (itemUIList.Count > 0)
+        {
+            OnItemButtonClicked(itemUIList[0].ItemId);
+        }
     }
 
     public void OnItemButtonClicked(int itemId)
@@ -68,5 +74,10 @@ public class FillingPanelUI : MonoBehaviour
         }
 
         placementSystem.StartFilling(itemId);
+    }
+
+    public void OnEnable()
+    {
+        PopulateItemPanel();
     }
 }

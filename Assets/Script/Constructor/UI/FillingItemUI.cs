@@ -30,7 +30,7 @@ public class FillingItemUI : MonoBehaviour
 
     private void OnButtonClick()
     {
-        Debug.Log("Button clicked for item ID: " + itemId);
+       // Debug.Log("Button clicked for item ID: " + itemId);
 
         panelUI.OnItemButtonClicked(itemId);
     }

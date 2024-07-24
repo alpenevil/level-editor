@@ -44,6 +44,12 @@ public class ItemPanelUI : MonoBehaviour
                 Debug.LogError("ItemUI component not found in the prefab.");
             }
         }
+
+        if (itemUIList.Count > 0)
+        {
+            OnItemSelected(itemUIList[0]);
+            //placementSystem.StartPlacement(itemUIList[0].ItemId);
+        }
     }
 
     public void OnItemButtonClicked(int itemId)
@@ -97,5 +103,7 @@ public class ItemPanelUI : MonoBehaviour
                 }
             }
         }
+
+        
     }
 }

@@ -6,6 +6,7 @@ public class LevelEditorUI : MonoBehaviour
     public Button installButton;
     public Button fillButton;
     public Button randomInstallButton;
+    public Button exitButton; 
 
     public GameObject installPanel;
     public GameObject fillPanel;
@@ -18,22 +19,31 @@ public class LevelEditorUI : MonoBehaviour
     public Sprite randomInstallButtonNormalSprite;
     public Sprite randomInstallButtonSelectedSprite;
 
-    public ItemPanelUI itemPanelUI;
+    public ItemPanelUI itemPanelUI; 
+
+    public GameObject exitConfirmationPanel;
+    public Button exitYesButton;
+    public Button exitCancelButton;
 
     private GameObject activePanel;
     private Button activeButton;
     private RectTransform installPanelRect;
     private RectTransform fillPanelRect;
     private RectTransform randomInstallPanelRect;
-    private Vector3 originalInstallButtonLocalPosition;
-    private Vector3 originalFillButtonLocalPosition;
-    private Vector3 originalRandomInstallButtonLocalPosition;
+    private RectTransform installButtonRect;
+    private RectTransform fillButtonRect;
+    private RectTransform randomInstallButtonRect;
+    private CanvasGroup mainCanvasGroup;
+    private Vector2 originalInstallButtonPos;
+    private Vector2 originalFillButtonPos;
+    private Vector2 originalRandomInstallButtonPos;
 
     void Start()
     {
         installButton.onClick.AddListener(() => SetMode(installButton, installPanel, installButtonNormalSprite, installButtonSelectedSprite));
         fillButton.onClick.AddListener(() => SetMode(fillButton, fillPanel, fillButtonNormalSprite, fillButtonSelectedSprite));
         randomInstallButton.onClick.AddListener(() => SetMode(randomInstallButton, randomInstallPanel, randomInstallButtonNormalSprite, randomInstallButtonSelectedSprite));
+        exitButton.onClick.AddListener(ShowExitConfirmationPanel);
 
         installPanel.SetActive(false);
         fillPanel.SetActive(false);
@@ -42,18 +52,41 @@ public class LevelEditorUI : MonoBehaviour
         installPanelRect = installPanel.GetComponent<RectTransform>();
         fillPanelRect = fillPanel.GetComponent<RectTransform>();
         randomInstallPanelRect = randomInstallPanel.GetComponent<RectTransform>();
+        installButtonRect = installButton.GetComponent<RectTransform>();
+        fillButtonRect = fillButton.GetComponent<RectTransform>();
+        randomInstallButtonRect = randomInstallButton.GetComponent<RectTransform>();
 
-        originalInstallButtonLocalPosition = installButton.GetComponent<RectTransform>().localPosition;
-        originalFillButtonLocalPosition = fillButton.GetComponent<RectTransform>().localPosition;
-        originalRandomInstallButtonLocalPosition = randomInstallButton.GetComponent<RectTransform>().localPosition;
+        originalInstallButtonPos = installButtonRect.anchoredPosition;
+        originalFillButtonPos = fillButtonRect.anchoredPosition;
+        originalRandomInstallButtonPos = randomInstallButtonRect.anchoredPosition;
 
         SetButtonSprite(installButton, installButtonNormalSprite);
         SetButtonSprite(fillButton, fillButtonNormalSprite);
         SetButtonSprite(randomInstallButton, randomInstallButtonNormalSprite);
+
+        Canvas.ForceUpdateCanvases();
+        //LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
+
+        exitYesButton.onClick.AddListener(ExitToMainMenu);
+        exitCancelButton.onClick.AddListener(CloseExitConfirmationPanel);
+
+        exitConfirmationPanel.SetActive(false);
+
+        mainCanvasGroup = GetComponent<CanvasGroup>();
+        if (mainCanvasGroup == null)
+        {
+            mainCanvasGroup = gameObject.AddComponent<CanvasGroup>();
+        }
     }
 
     void SetMode(Button button, GameObject panel, Sprite normalSprite, Sprite selectedSprite)
     {
+        if (activeButton == button)
+        {
+            CloseActivePanel();
+            return;
+        }
+
         if (activeButton != null)
         {
             SetButtonSprite(activeButton, GetNormalSprite(activeButton));
@@ -66,11 +99,11 @@ public class LevelEditorUI : MonoBehaviour
 
         panel.SetActive(true);
         activePanel = panel;
+
         SetButtonSprite(button, selectedSprite);
         activeButton = button;
 
-        float offsetX = 0f;
-
+        float offsetX = 0;
         if (panel == installPanel)
         {
             offsetX = installPanelRect.rect.width;
@@ -90,9 +123,16 @@ public class LevelEditorUI : MonoBehaviour
 
     void MoveButtons(float offsetX)
     {
-        installButton.GetComponent<RectTransform>().localPosition = originalInstallButtonLocalPosition + new Vector3(offsetX, 0, 0);
-        fillButton.GetComponent<RectTransform>().localPosition = originalFillButtonLocalPosition + new Vector3(offsetX, 0, 0);
-        randomInstallButton.GetComponent<RectTransform>().localPosition = originalRandomInstallButtonLocalPosition + new Vector3(offsetX, 0, 0);
+        installButtonRect.anchoredPosition = new Vector2(offsetX, installButtonRect.anchoredPosition.y);
+        fillButtonRect.anchoredPosition = new Vector2(offsetX, fillButtonRect.anchoredPosition.y);
+        randomInstallButtonRect.anchoredPosition = new Vector2(offsetX, randomInstallButtonRect.anchoredPosition.y);
+    }
+
+    void ResetButtonPositions()
+    {
+        installButtonRect.anchoredPosition = originalInstallButtonPos;
+        fillButtonRect.anchoredPosition = originalFillButtonPos;
+        randomInstallButtonRect.anchoredPosition = originalRandomInstallButtonPos;
     }
 
     void SetButtonSprite(Button button, Sprite sprite)
@@ -132,5 +172,57 @@ public class LevelEditorUI : MonoBehaviour
             return randomInstallButtonSelectedSprite;
         }
         return null;
+    }
+
+    void CloseActivePanel()
+    {
+        if (activeButton != null)
+        {
+            SetButtonSprite(activeButton, GetNormalSprite(activeButton));
+            activeButton = null;
+        }
+
+        if (activePanel != null)
+        {
+            activePanel.SetActive(false);
+            activePanel = null;
+        }
+
+        ResetButtonPositions();
+    }
+
+    private void OnRectTransformDimensionsChange()
+    {
+        if (activePanel != null)
+        {
+            float offsetX = activePanel.GetComponent<RectTransform>().rect.width;
+            MoveButtons(offsetX);
+        }
+    }
+
+    public void ShowExitConfirmationPanel()
+    {
+        exitConfirmationPanel.SetActive(true);
+        SetMainCanvasGroupInteractable(false);
+    }
+
+    public void CloseExitConfirmationPanel()
+    {
+        exitConfirmationPanel.SetActive(false);
+        SetMainCanvasGroupInteractable(true);
+    }
+
+    void ExitToMainMenu()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+    }
+
+    void SetMainCanvasGroupInteractable(bool isInteractable)
+    {
+        if (mainCanvasGroup != null)
+        {
+            mainCanvasGroup.interactable = isInteractable;
+            mainCanvasGroup.blocksRaycasts = isInteractable;
+        }
     }
 }
