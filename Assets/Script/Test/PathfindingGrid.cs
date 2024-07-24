@@ -49,7 +49,7 @@ public class PathfindingGrid : MonoBehaviour
                 Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
                 bool walkable = !(Physics.CheckSphere(worldPoint, nodeRadius, unwalkableMask));
 
-                // Проверка на наличие пола
+                // РџСЂРѕРІРµСЂРєР° РЅР° РЅР°Р»РёС‡РёРµ РїРѕР»Р°
                 bool hasFloor = Physics.CheckSphere(worldPoint, nodeRadius, floorMask);
                 if (!hasFloor)
                 {
